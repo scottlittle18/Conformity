@@ -22,7 +22,7 @@ public class ThirdPerson_PlayerInputListener : MonoBehaviour
     #endregion
 
     // Start is called before the first frame update
-    void Start()
+    private void Start()
     {
         mainCam = Camera.main;
         camController = GetComponent<ThirdPerson_CameraController>();
@@ -30,13 +30,14 @@ public class ThirdPerson_PlayerInputListener : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    private void Update()
     {
         ListenForMoveInput();
     }
 
     private void ListenForMoveInput()
     {
+        //Retrieve Move Input
         verticalMoveInput = Input.GetAxisRaw("Vertical");
         horizontalMoveInput = Input.GetAxisRaw("Horizontal");
 
@@ -49,9 +50,6 @@ public class ThirdPerson_PlayerInputListener : MonoBehaviour
 
         //Calculate Move Input Based On Camera's Relative Position
         intentedMoveDirection = (camForward.normalized * verticalMoveInput + camRight.normalized * horizontalMoveInput);
-
-        //Convert the intendedMovementDirection from the MainCamera's local space to World space
-        mainCam.transform.TransformDirection(intentedMoveDirection);
 
         playerMovementHandler.MovePlayer(intentedMoveDirection, camController.MainCameraSpace);
     }

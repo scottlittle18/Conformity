@@ -41,6 +41,7 @@ public class ThirdPerson_CameraController : MonoBehaviour
         }
     }
 
+    #region MonoBehaviour Functions
     // Start is called before the first frame update
     private void Start()
     {
@@ -55,6 +56,7 @@ public class ThirdPerson_CameraController : MonoBehaviour
     {
         ListenForLookInput();
     }
+    #endregion
 
     private void SetCameraLookLimits()
     {
@@ -69,6 +71,7 @@ public class ThirdPerson_CameraController : MonoBehaviour
 
     private void ListenForLookInput()
     {
+        //Retrieve Look Input
         lookInputX += Input.GetAxisRaw("Mouse X") * lookSensitivity;
         lookInputY -= Input.GetAxisRaw("Mouse Y") * lookSensitivity;
 
@@ -82,7 +85,10 @@ public class ThirdPerson_CameraController : MonoBehaviour
     {
         transform.LookAt(cameraTarget);
 
+        // Follow the player's position
         cameraTarget.position = playerTransform.position;
+
+        // Rotate based on player's look input
         cameraTarget.rotation = Quaternion.Euler(lookInputY, lookInputX, 0);
     }
 }
