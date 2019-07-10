@@ -25,8 +25,8 @@ public class ThirdPerson_PlayerInputListener : MonoBehaviour
     void Start()
     {
         mainCam = Camera.main;
-        camController = Camera.main.GetComponent<ThirdPerson_CameraController>();
-        playerMovementHandler = GetComponent<ThirdPerson_PlayerMovementHandler>();
+        camController = GetComponent<ThirdPerson_CameraController>();
+        playerMovementHandler = GameObject.FindGameObjectWithTag("Player").GetComponent<ThirdPerson_PlayerMovementHandler>();
     }
 
     // Update is called once per frame
@@ -35,22 +35,24 @@ public class ThirdPerson_PlayerInputListener : MonoBehaviour
         ListenForMoveInput();
     }
 
-    private void LateUpdate()
-    {
-        camController.ListenForLookInput();
-    }
-
     private void ListenForMoveInput()
     {
         verticalMoveInput = Input.GetAxisRaw("Vertical");
         horizontalMoveInput = Input.GetAxisRaw("Horizontal");
 
+        // Get the MainCamera's forward and rightward directions
         camForward = mainCam.transform.forward;
+        camForward.y = 0f;
+
         camRight = mainCam.transform.right;
+        camRight.y = 0f;
 
         //Calculate Move Input Based On Camera's Relative Position
-        intentedMoveDirection = verticalMoveInput * camForward + horizontalMoveInput * camRight;
-        
+        intentedMoveDirection = (camForward.normalized * verticalMoveInput + camRight.normalized * horizontalMoveInput);
+
+        //Convert the intendedMovementDirection from the MainCamera's local space to World space
+        mainCam.transform.TransformDirection(intentedMoveDirection);
+
         playerMovementHandler.MovePlayer(intentedMoveDirection, camController.MainCameraSpace);
     }
 }

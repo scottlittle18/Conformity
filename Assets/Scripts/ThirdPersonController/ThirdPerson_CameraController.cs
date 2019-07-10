@@ -24,7 +24,7 @@ public class ThirdPerson_CameraController : MonoBehaviour
     private float lookInputX, lookInputY;
 
     [SerializeField]
-    private Transform lookTarget;
+    private Transform cameraTarget;
 
     [SerializeField]
     private Transform playerTransform;
@@ -51,9 +51,14 @@ public class ThirdPerson_CameraController : MonoBehaviour
         SetCameraLookLimits();
     }
 
+    private void LateUpdate()
+    {
+        ListenForLookInput();
+    }
+
     private void SetCameraLookLimits()
     {
-        //In case values are not set then these are the default look settings
+        //In case values are not set in the editor then these are the default look settings
         if (yAxisTop == 0)
             yAxisTop = -35;
         if (yAxisBottom == 0)
@@ -62,20 +67,22 @@ public class ThirdPerson_CameraController : MonoBehaviour
             lookSensitivity = 1;
     }
 
-    public void ListenForLookInput()
+    private void ListenForLookInput()
     {
         lookInputX += Input.GetAxisRaw("Mouse X") * lookSensitivity;
         lookInputY -= Input.GetAxisRaw("Mouse Y") * lookSensitivity;
-        lookInputY = Mathf.Clamp(lookInputY, yAxisTop, yAxisBottom);
 
+        //Clamps the look rotation to keep it from going too high or low
+        lookInputY = Mathf.Clamp(lookInputY, yAxisTop, yAxisBottom);
+        
         CameraController();
     }
 
     private void CameraController()
     {
-        transform.LookAt(lookTarget);
+        transform.LookAt(cameraTarget);
 
-        lookTarget.position = playerTransform.position;
-        lookTarget.rotation = Quaternion.Euler(lookInputY, lookInputX, 0);
+        cameraTarget.position = playerTransform.position;
+        cameraTarget.rotation = Quaternion.Euler(lookInputY, lookInputX, 0);
     }
 }
