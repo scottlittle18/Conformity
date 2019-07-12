@@ -9,9 +9,13 @@ using UnityEngine;
 /// </summary>
 public class ThirdPerson_PlayerInputListener : MonoBehaviour
 {
+    
+
     #region Non-Serialized Fields
     //Input Fields
     private float verticalMoveInput, horizontalMoveInput;
+    private bool jumpInput = false;
+
     
     //Special Fields (e.g. Vector3, RigidBody, etc.)
     private Vector3 intentedMoveDirection;
@@ -33,6 +37,20 @@ public class ThirdPerson_PlayerInputListener : MonoBehaviour
     private void Update()
     {
         ListenForMoveInput();
+
+        //Allow Player to Jump if they are on the Ground
+        if (playerMovementHandler.IsGrounded == true)
+        {
+            ListenForJumpInput();
+        }
+    }
+    
+    private void ListenForJumpInput()
+    {
+        jumpInput = Input.GetButton("Jump");
+
+        //TODO: Debug
+        Debug.Log($"Jump Input Received; JumpInput == {jumpInput}");
     }
 
     private void ListenForMoveInput()

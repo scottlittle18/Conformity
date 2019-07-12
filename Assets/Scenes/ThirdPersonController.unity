@@ -375,7 +375,7 @@ Light:
   m_BounceIntensity: 1
   m_ColorTemperature: 6570
   m_UseColorTemperature: 0
-  m_BoundingSphereOverride: {x: 0, y: 2.8039966e-12, z: 6.7e-43, w: 2.8039966e-12}
+  m_BoundingSphereOverride: {x: 0, y: 0, z: 0, w: 0}
   m_UseBoundingSphereOverride: 0
   m_ShadowRadius: 0
   m_ShadowAngle: 0
@@ -683,3 +683,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   moveSpeed: 1
   turningSpeed: 1
+  groundCheckRadius: 0.2

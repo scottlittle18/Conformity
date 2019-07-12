@@ -14,13 +14,41 @@ public class ThirdPerson_PlayerMovementHandler : MonoBehaviour
     [SerializeField, Tooltip("How fast the player will turn to look in the movement direction")]
     private float turningSpeed;
 
+    [SerializeField, Tooltip("The max distance that the Ground Detector will look.")]
+    private float groundCheckRadius;
+
     private Vector3 lastMoveDirection;
     private Vector3 appliedMoveDirection;
+    private LayerMask groundLayerMask;
 
+    private bool isGrounded;
+    public bool IsGrounded
+    {
+        get { return isGrounded; }
+        private set { isGrounded = value; }
+    }
+
+    private void Awake()
+    {
+        groundLayerMask = LayerMask.GetMask("Ground");
+    }
     // Update is called once per frame
     private void Update()
     {
         DetermineLookDirection();
+
+        CheckIfOnPlayerIsGrounded();
+    }
+
+    private void CheckIfOnPlayerIsGrounded()
+    {
+        //Detect if the Player is on the ground
+
+        isGrounded = Physics.CheckSphere(-transform.up, groundCheckRadius, groundLayerMask);
+
+        //TODO: Debug
+        Debug.Log($"isGrounded == {isGrounded}");
+        Debug.Log($"IsGrounded == {IsGrounded}");
     }
 
     private void DetermineLookDirection()
