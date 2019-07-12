@@ -9,26 +9,41 @@ using UnityEngine;
 public class ThirdPerson_CameraController : MonoBehaviour
 {
     #region Serialized Fields
-    [SerializeField, Tooltip("This is the highest the camera will go around the player." +
-        " (This also keeps the camera from looking straight down at the player)")]
-    private float yAxisTop;
-
-    [SerializeField, Tooltip("This is the lowest the camera will go around the player." +
-        " (This also keeps the camera from looking straight up at the player)")]
-    private float yAxisBottom;
-
-    [SerializeField, Tooltip("Controls how fast the camera will rotate around the player when looking around.")]
-    private float lookSensitivity;
-    #endregion
-
-    private float lookInputX, lookInputY;
-
-    [SerializeField]
+    [SerializeField, Tooltip("This is transform of the object that will be the camera's focal point.")]
     private Transform cameraTarget;
 
     [SerializeField]
     private Transform playerTransform;
 
+
+    [SerializeField, Tooltip("Controls how fast the camera will rotate around the player when looking around.")]
+    private float lookSensitivity;
+    #endregion
+
+    #region Classes & Associated Declarations
+    [Serializable]
+    public class AxisSettings
+    {
+        [Tooltip("This is the highest the camera will go around the player." +
+        " (This also keeps the camera from looking straight down at the player)")]
+        public float yAxisTop;
+
+        [Tooltip("This is the lowest the camera will go around the player." +
+            " (This also keeps the camera from looking straight up at the player)")]
+        public float yAxisBottom;
+
+        [Tooltip("The Y Axis (Up/Down) offset of the camera from the player.")]
+        public float yAxisOffset;
+
+        [Tooltip("The X Axis (Left/Right) offset of the camera from the player.")]
+        public float xAxisOffset;        
+    }
+
+    [SerializeField]
+    private AxisSettings axisSettings = new AxisSettings();
+    #endregion
+
+    private float lookInputX, lookInputY;
     private Space mainCameraSpace;
 
     //Meant to be Read-Only
@@ -48,8 +63,13 @@ public class ThirdPerson_CameraController : MonoBehaviour
         //Lock Cursor in place and make it Invisible
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
-
+        
         SetCameraLookLimits();
+    }
+
+    private void Update()
+    {
+        FollowPlayer();
     }
 
     private void LateUpdate()
@@ -58,13 +78,18 @@ public class ThirdPerson_CameraController : MonoBehaviour
     }
     #endregion
 
-    private void SetCameraLookLimits()
+    private void FollowPlayer()
     {
+        //TODO: Add code for DeadZone Here
+    }
+
+    private void SetCameraLookLimits()
+    {        
         //In case values are not set in the editor then these are the default look settings
-        if (yAxisTop == 0)
-            yAxisTop = -35;
-        if (yAxisBottom == 0)
-            yAxisBottom = 60;
+        if (axisSettings.yAxisTop == 0)
+            axisSettings.yAxisTop = -35;
+        if (axisSettings.yAxisBottom == 0)
+            axisSettings.yAxisBottom = 60;
         if (lookSensitivity == 0)
             lookSensitivity = 1;
     }
@@ -76,7 +101,7 @@ public class ThirdPerson_CameraController : MonoBehaviour
         lookInputY -= Input.GetAxisRaw("Mouse Y") * lookSensitivity;
 
         //Clamps the look rotation to keep it from going too high or low
-        lookInputY = Mathf.Clamp(lookInputY, yAxisTop, yAxisBottom);
+        lookInputY = Mathf.Clamp(lookInputY, axisSettings.yAxisTop, axisSettings.yAxisBottom);
         
         CameraController();
     }
@@ -85,8 +110,8 @@ public class ThirdPerson_CameraController : MonoBehaviour
     {
         transform.LookAt(cameraTarget);
 
-        // Follow the player's position
-        cameraTarget.position = playerTransform.position;
+        // Follow the player's position and offset the camera as needed (or wanted)
+        cameraTarget.position = playerTransform.position + new Vector3(axisSettings.xAxisOffset, axisSettings.yAxisOffset, 0);
 
         // Rotate based on player's look input
         cameraTarget.rotation = Quaternion.Euler(lookInputY, lookInputX, 0);

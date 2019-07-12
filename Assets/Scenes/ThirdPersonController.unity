@@ -375,7 +375,7 @@ Light:
   m_BounceIntensity: 1
   m_ColorTemperature: 6570
   m_UseColorTemperature: 0
-  m_BoundingSphereOverride: {x: 1.6544117e-24, y: 2048, z: 1.9721532e-31, w: 9.403955e-38}
+  m_BoundingSphereOverride: {x: 0, y: 2.8039966e-12, z: 6.7e-43, w: 2.8039966e-12}
   m_UseBoundingSphereOverride: 0
   m_ShadowRadius: 0
   m_ShadowAngle: 0
@@ -491,11 +491,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bb54b3e3258b8af4badbe75f9abd5e15, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  yAxisTop: -35
-  yAxisBottom: 60
-  lookSensitivity: 1
   cameraTarget: {fileID: 1020096344}
   playerTransform: {fileID: 1554041916}
+  lookSensitivity: 1
+  axisSettings:
+    yAxisTop: -35
+    yAxisBottom: 60
+    yAxisOffset: 0
+    xAxisOffset: 0
 --- !u!114 &963194230
 MonoBehaviour:
   m_ObjectHideFlags: 0
