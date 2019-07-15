@@ -39,7 +39,7 @@ public class ThirdPerson_PlayerInputListener : MonoBehaviour
         ListenForMoveInput();
 
         //Allow Player to Jump if they are on the Ground
-        if (playerMovementHandler.IsGrounded == true)
+        if (playerMovementHandler.IsGrounded && playerMovementHandler.HasNotJumped)
         {
             ListenForJumpInput();
         }
@@ -47,10 +47,19 @@ public class ThirdPerson_PlayerInputListener : MonoBehaviour
     
     private void ListenForJumpInput()
     {
-        jumpInput = Input.GetButton("Jump");
+        jumpInput = Input.GetButtonDown("Jump");
 
         //TODO: Debug
         Debug.Log($"Jump Input Received; JumpInput == {jumpInput}");
+
+        if (jumpInput && playerMovementHandler.IsGrounded && playerMovementHandler.HasNotJumped)
+        {
+            playerMovementHandler.Jump();
+        }
+        else if (Input.GetButtonUp("Jump"))
+        {
+            playerMovementHandler.HasNotJumped = false;
+        }
     }
 
     private void ListenForMoveInput()
