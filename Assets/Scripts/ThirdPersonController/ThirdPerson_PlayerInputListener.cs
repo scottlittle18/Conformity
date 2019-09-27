@@ -9,13 +9,10 @@ using UnityEngine;
 /// </summary>
 public class ThirdPerson_PlayerInputListener : MonoBehaviour
 {
-    
-
     #region Non-Serialized Fields
     //Input Fields
     private float verticalMoveInput, horizontalMoveInput;
     private bool jumpInput = false;
-
     
     //Special Fields (e.g. Vector3, RigidBody, etc.)
     private Vector3 intentedMoveDirection;
@@ -39,7 +36,7 @@ public class ThirdPerson_PlayerInputListener : MonoBehaviour
         ListenForMoveInput();
 
         //Allow Player to Jump if they are on the Ground
-        if (playerMovementHandler.IsGrounded && playerMovementHandler.HasNotJumped)
+        if (playerMovementHandler.IsOnGround)
         {
             ListenForJumpInput();
         }
@@ -52,13 +49,10 @@ public class ThirdPerson_PlayerInputListener : MonoBehaviour
         //TODO: Debug
         Debug.Log($"Jump Input Received; JumpInput == {jumpInput}");
 
-        if (jumpInput && playerMovementHandler.IsGrounded && playerMovementHandler.HasNotJumped)
+        if (jumpInput)
         {
             playerMovementHandler.Jump();
-        }
-        else if (Input.GetButtonUp("Jump"))
-        {
-            playerMovementHandler.HasNotJumped = false;
+            playerMovementHandler.IsOnGround = false;
         }
     }
 
@@ -78,6 +72,7 @@ public class ThirdPerson_PlayerInputListener : MonoBehaviour
         //Calculate Move Input Based On Camera's Relative Position
         intentedMoveDirection = (camForward.normalized * verticalMoveInput + camRight.normalized * horizontalMoveInput);
 
+        //Apply Movement
         playerMovementHandler.MovePlayer(intentedMoveDirection, camController.MainCameraSpace);
     }
 }

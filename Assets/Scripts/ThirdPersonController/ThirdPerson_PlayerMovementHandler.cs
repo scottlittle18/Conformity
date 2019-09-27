@@ -8,6 +8,20 @@ using UnityEngine;
 /// </summary>
 public class ThirdPerson_PlayerMovementHandler : MonoBehaviour
 {
+    //TODO: Wanted to see how detecting if the player is on the ground here would go smoother
+    private bool isOnGround = true;
+    public bool IsOnGround
+    {
+        get
+        {
+            return isOnGround;
+        }
+        set
+        {
+            isOnGround = value;
+        }
+    }
+
     [SerializeField]
     private float moveSpeed;
 
@@ -17,67 +31,18 @@ public class ThirdPerson_PlayerMovementHandler : MonoBehaviour
     [SerializeField, Tooltip("How fast the player will turn to look in the movement direction")]
     private float turningSpeed;
 
-    [SerializeField, Tooltip("The max distance that the Ground Detector will look.")]
-    private float groundCheckRadius;
-
     private Vector3 lastMoveDirection;
     private Vector3 appliedMoveDirection;
-    private LayerMask playerLayerMask;
-    private Transform groundCheckPosition;
-    private Rigidbody playerRigidBody;
-
-    private bool isGrounded;
-    private bool hasNotJumped;
-    public bool IsGrounded
-    {
-        get { return isGrounded; }
-        private set
-        {
-            isGrounded = value;
-        }
-    }
-
-    public bool HasNotJumped
-    {
-        get
-        {
-            if (IsGrounded == true)
-            {
-                return hasNotJumped = true;
-            }
-            else if (IsGrounded == false)
-            {
-                return hasNotJumped = false;
-            }
-            else
-                return hasNotJumped;
-        }
-        set { hasNotJumped = value; }
-    }
+    private Rigidbody playerRigidBody;    
 
     private void Awake()
-    {
-        playerLayerMask = LayerMask.GetMask("Player");
-        groundCheckPosition = GameObject.Find("GroundCheck").transform;
+    {        
         playerRigidBody = GetComponent<Rigidbody>();
     }
     // Update is called once per frame
     private void Update()
     {
         DetermineLookDirection();
-
-        Debug.Log($"isGrounded == {isGrounded}");
-        Debug.Log($"IsGrounded == {IsGrounded}");
-        CheckIfOnPlayerIsGrounded();
-    }
-
-    private void CheckIfOnPlayerIsGrounded()
-    {
-        //Detect if the Player is on the ground
-        
-        IsGrounded = Physics.CheckSphere(groundCheckPosition.position, groundCheckRadius, playerLayerMask);
-
-        //TODO: Debug
     }
 
     public void Jump()
@@ -107,5 +72,10 @@ public class ThirdPerson_PlayerMovementHandler : MonoBehaviour
 
         // Translate applied movement to world space && Apply Movement
         transform.Translate(-appliedMoveDirection, Space.World);
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        IsOnGround = true;
     }
 }
