@@ -41,7 +41,7 @@ public class ThirdPerson_PlayerInputListener : MonoBehaviour
             ListenForJumpInput();
         }
     }
-    
+
     private void ListenForJumpInput()
     {
         jumpInput = Input.GetButtonDown("Jump");
