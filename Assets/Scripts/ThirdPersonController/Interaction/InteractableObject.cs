@@ -9,14 +9,19 @@ using UnityEngine;
 ///     
 /// Implementation Procedure:
 ///     1. Attach to the object you want to make interactable.
-///     2. Set the DisplayText field in the Editor.
+///     2. Ensure the name of the GameObject is the typed in-editor the same way you'd like it displayed in-game.
 ///     3. Use and Interact!
 ///     
 /// </summary>
-public class InteractableObject : IInteractable
+public class InteractableObject : MonoBehaviour, IInteractable
 {
     public string DisplayText {get; private set; }
 
+    private void Awake()
+    {
+        // Set the DisplayText that appears to be the name of the object
+        DisplayText = gameObject.name;
+    }
     /// <summary>
     /// Called when an InteractableObject is interacted with by the Player.
     /// </summary>
